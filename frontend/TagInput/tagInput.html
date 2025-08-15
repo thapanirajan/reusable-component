@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tag Input</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="p-8">
+    <div class="max-w-md" id="tag-input-component">
+      <label for="tag-input" class="block text-zinc-500 mb-2 font-medium">
+        Tags*
+      </label>
+
+      <!-- Input field -->
+      <input
+        id="tag-input"
+        type="text"
+        placeholder="Type tag & press Enter"
+        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-shadow duration-200 shadow-sm" />
+
+      <!-- Tags container -->
+      <div id="tags-container" class="mt-3 flex flex-wrap gap-2"></div>
+    </div>
+
+    <script>
+      (function () {
+        const input = document.getElementById("tag-input");
+        const container = document.getElementById("tags-container");
+        const tags = [];
+
+        // Add tag on Enter
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const value = input.value.trim();
+            if (value && !tags.includes(value)) {
+              tags.push(value);
+              renderTags();
+              input.value = "";
+            }
+          }
+        });
+
+        // Render all tags
+        function renderTags() {
+          container.innerHTML = "";
+          tags.forEach((tagValue, index) => {
+            const tag = document.createElement("div");
+            tag.className =
+              "flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium hover:bg-blue-200 transition-colors duration-200";
+
+            const span = document.createElement("span");
+            span.textContent = tagValue;
+
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.textContent = "×";
+            btn.className =
+              "text-blue-600 hover:text-red-500 font-bold transition-colors duration-200";
+            btn.addEventListener("click", () => {
+              tags.splice(index, 1);
+              renderTags();
+            });
+
+            tag.appendChild(span);
+            tag.appendChild(btn);
+            container.appendChild(tag);
+          });
+        }
+
+        window.getTags = () => tags;
+      })();
+    </script>
+  </body>
+</html>
